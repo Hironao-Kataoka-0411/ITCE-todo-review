@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Task;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +15,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    //
+    return view('tasks', [
+        'tasks' => App\Models\Task::latest()->get()
+    ]);
  });
- Route::post('/task', function (Request $request) {
-    //
- });
- Route::delete('/task/{task}', function () {
-    //
+
+Route::post('/task', function (Request $request) {
+        request()->validate(
+            [
+                'name' => 'required|unique:tasks|min:3|max:255'
+            ],
+            [
+                'name.required' => 'タスク内容を入力してください。',
+                'name.unique' => 'そのタスクは既に追加されています。',
+                'name.min' => '3文字以上で入力してください。',
+                'name.max' => '255文字以内で入力してください。'
+            ]
+        );
+        $task = new Task();
+        $task->name = request('name');
+        $task->save();
+        return redirect('/');
+    });
+
+Route::delete('/task/{task}', function (Task $task) {
+        $task->delete();
+        return redirect('/');
  });
