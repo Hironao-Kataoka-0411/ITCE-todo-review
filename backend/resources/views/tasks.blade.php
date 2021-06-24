@@ -13,6 +13,7 @@
    <div class="card mb-3">
      <div class="card-header">タスク新規追加</div>
      <div class="card-body">
+
        <form method="POST" action="{{ url('/task') }}">
          @csrf
          <div class="form-group">
@@ -20,6 +21,10 @@
            @if ($errors->has('name'))
            <p class="text-danger">{{ $errors->first('name') }}</p>
            @endif
+
+           <div class="finished_at">終了日時</div>
+           <input type="datetime-local" name="finished_at" class="form-date">
+
            <button type="submit" class="btn btn-outline-info mt-2"><i class="fas fa-plus fa-lg mr-2"></i>追加</button>
          </div>
        </form>
@@ -30,6 +35,11 @@
      <div class="card-body">
        @if (count($tasks) > 0)
        <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>タスク内容</td> <td>削除ボタン</td> <td>記入時間</td>　<td>完了予定時間</td>
+            </tr>
+        </thead>
          <tbody>
            @foreach ($tasks as $task)
            <tr>
@@ -41,6 +51,8 @@
                  <button type="submit" class="btn btn-outline-danger" style="width: 100px;"><i class="far fa-trash-alt"></i> 削除</button>
                </form>
              </td>
+             <td>{{ $task->created_at }}</td>
+             <td>{{ date('Y/m/d :H:i',strtotime($task->finished_at)) }}</td>
            </tr>
            @endforeach
          </tbody>
