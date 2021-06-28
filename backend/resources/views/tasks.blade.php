@@ -22,8 +22,8 @@
            <p class="text-danger">{{ $errors->first('name') }}</p>
            @endif
 
-           <div class="finished_at">終了日時</div>
-           <input type="datetime-local" name="finished_at" class="form-date">
+           <div class="finished_at">タスクの完了予定日時</div>
+           <div><input type="datetime-local" name="finished_at" class="form-date"></div>
 
            <button type="submit" class="btn btn-outline-info mt-2"><i class="fas fa-plus fa-lg mr-2"></i>追加</button>
          </div>
@@ -51,8 +51,19 @@
                  <button type="submit" class="btn btn-outline-danger" style="width: 100px;"><i class="far fa-trash-alt"></i> 削除</button>
                </form>
              </td>
-             <td>{{ $task->created_at }}</td>
-             <td>{{ date('Y/m/d :H:i',strtotime($task->finished_at)) }}</td>
+             <td >{{ $task->created_at }}</td>
+             <td class="finished">
+                @if (isset($task->finished_at))
+                    @if ($task->finished_at < now())
+                        <span style="color: crimson">{{  date('Y/m/d H:i',strtotime($task->finished_at)) }}</span>
+                    @else
+                        {{  date('Y/m/d H:i',strtotime($task->finished_at)) }}
+                    @endif
+                @else
+                    <p></p>
+                @endif
+
+            </td>
            </tr>
            @endforeach
          </tbody>
