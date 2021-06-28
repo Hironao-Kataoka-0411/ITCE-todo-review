@@ -55,7 +55,7 @@
              <td class="finished">
                 @if (isset($task->finished_at))
                     @if ($task->finished_at < now())
-                        <span style="color: crimson">{{  date('Y/m/d H:i',strtotime($task->finished_at)) }}</span>
+                        <div class="finished_at">{{  date('Y/m/d H:i',strtotime($task->finished_at)) }}</div>
                     @else
                         {{  date('Y/m/d H:i',strtotime($task->finished_at)) }}
                     @endif
