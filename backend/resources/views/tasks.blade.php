@@ -5,7 +5,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Basic Tasks</title>
  <!-- <link type="text/css" rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
- <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
+ <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css')}}">
 </head>
 <body>
  <div class="container">
@@ -22,7 +22,7 @@
            <p class="text-danger">{{ $errors->first('name') }}</p>
            @endif
 
-           <div class="finished_at">タスクの完了予定日時</div>
+           <div class="finished_at">タスクの期限を決める</div>
            <div><input type="datetime-local" name="finished_at" class="form-date"></div>
 
            <button type="submit" class="btn btn-outline-info mt-2"><i class="fas fa-plus fa-lg mr-2"></i>追加</button>
@@ -35,15 +35,19 @@
      <div class="card-body">
        @if (count($tasks) > 0)
        <table class="table table-striped">
-        <thead>
-            <tr>
-                <td>タスク内容</td> <td>削除ボタン</td> <td>記入時間</td>　<td>完了予定時間</td>
-            </tr>
-        </thead>
-         <tbody>
+        　<tbody>
+            <thead>
+                    <th class="subtitle">タスク内容</th>
+                    <th class="subtitle">編集ボタン</th>
+                    <th class="subtitle">削除ボタン</th>
+                    <th class="subtitle">記入時間</th>
+                    <th class="subtitle">期限</th>
+            </thead>
+
            @foreach ($tasks as $task)
            <tr>
              <td>{{ $task->name }}</td>
+             <td><a href="{{ route('edit.blade' , ['id' => $task->id] )}}" class="btn btn-primary" style="width: 100px;">編集</a></td>
              <td>
                <form method="POST" action="{{ url('/task/' . $task->id) }}">
                  @csrf
@@ -51,18 +55,18 @@
                  <button type="submit" class="btn btn-outline-danger" style="width: 100px;"><i class="far fa-trash-alt"></i> 削除</button>
                </form>
              </td>
-             <td >{{ $task->created_at }}</td>
-             <td class="finished">
+             <td >{{ date('Y/m/d H:i',strtotime($task->created_at)) }}</td>
+             <td>
+
                 @if (isset($task->finished_at))
-                    @if ($task->finished_at < now())
-                        <div class="finished_at">{{  date('Y/m/d H:i',strtotime($task->finished_at)) }}</div>
+                    @if ($task->finished_at > now())
+                        {{ date('Y/m/d H:i' , strtotime($task->finished_at)) }}
                     @else
-                        {{  date('Y/m/d H:i',strtotime($task->finished_at)) }}
+                            <span class="finished_at">{{  date('Y/m/d H:i',strtotime($task->finished_at)) }}</span>
                     @endif
                 @else
                     <p></p>
                 @endif
-
             </td>
            </tr>
            @endforeach

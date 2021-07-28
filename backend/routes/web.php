@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Task;
+use Illuminate\Bus\UpdatedBatchJobCounts;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,13 @@ Route::get('/', function () {
     ]);
  });
 
+
+
+ Route::get('/edit/{id}' , 'App\Http\Controllers\TasksController@editForm')->name('edit.blade');
+ Route::post('/edit/{id}', 'App\Http\Controllers\TasksController@edit');
+
+
+ //tasks.blade.phpからformリクエストの設定、バリデーション
 Route::post('/task', function (Request $request) {
         request()->validate(
             [
@@ -33,6 +41,7 @@ Route::post('/task', function (Request $request) {
             ]
         );
         $task = new Task();
+        $task->id = request('id');
         $task->name = request('name');
         $task->finished_at = request('finished_at');
 
@@ -40,7 +49,11 @@ Route::post('/task', function (Request $request) {
         return redirect('/');
     });
 
+
+
+
 Route::delete('/task/{task}', function (Task $task) {
         $task->delete();
         return redirect('/');
  });
+

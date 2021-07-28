@@ -1,7 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 @charset "UTF-8";
+/*body レイアウト*/
 
-.finished_at{color:crimson;}
+span.finished_at{color:crimson;}
+
+thead{
+    margin-left: 10%;
+}
+
+
+
 
 
 
